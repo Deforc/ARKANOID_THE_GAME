@@ -88,7 +88,7 @@ void Collision(Block& block, std::vector<Ball>& balls, Statistics& statistics, b
 
             if (block.getSpeedBonus() == 1.f)
                 ball.setSpeed({ (ball.getSpeed().x > 0) ? ballSpeed : -ballSpeed,(ball.getSpeed().y > 0) ? ballSpeed : -ballSpeed });
-            else ball.setSpeed({ ball.getSpeed().x * ballSpeedBonus, ball.getSpeed().y * ballSpeedBonus });
+            else ball.setSpeed({ ball.getSpeed().x * block.getSpeedBonus(), ball.getSpeed().y * block.getSpeedBonus() });
 
 
             float intersectionLeft = ball.getPosRight() - block.getPosLeft();

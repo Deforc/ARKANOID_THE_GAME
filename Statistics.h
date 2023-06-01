@@ -11,7 +11,7 @@ public:
     void scorePlusPlus() { score++; }
 
 private:
-    int healthpoint = 1;
+    int healthpoint = 5;
     int score = 0;
 };
 

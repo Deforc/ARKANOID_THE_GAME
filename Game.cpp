@@ -29,7 +29,7 @@ void Game::setText() {
 
     finalPhrase.setFont(font);
     finalPhrase.setCharacterSize(130);
-    finalPhrase.setPosition(windowWidth/2, 3*windowHeight/4);
+    finalPhrase.setPosition(windowWidth/2 - 140, windowHeight/2);
 
 }
 
@@ -38,7 +38,7 @@ void Game::setBogey() {
 }
 
 void Game::setBalls() {
-    balls.emplace_back(windowWidth / 2  + 250, 3 * windowHeight / 4, sf::Color::White);
+    balls.emplace_back(windowWidth / 2  - 200, 3 * windowHeight / 4, sf::Color::White);
 }
 
 
@@ -60,7 +60,7 @@ void Game::setBlocks() {
     for(int v = 1; v <= tankBlockAmountY; v++)
     {
         tankBlocks.emplace_back(600, (v+1)*(blockY + 25),sf::Color::Green);
-        tankBlocks[v].setHP(20);
+        tankBlocks[v].setHP(3);
     }
 
     //Generate speed blocks so that they are to the right of the tank ones.
@@ -121,6 +121,7 @@ void Game::mainLoop() {
                 ball.setStickiness(false);
             bogey.setStickiness(false);
         }
+
         // CHECKING COLLISIONS------------------------------------------------
         checkBallBlockCollision(simpleBlocks, balls, statistics);
         deletingBlocks(simpleBlocks);
@@ -139,7 +140,6 @@ void Game::mainLoop() {
             Collision(bonusBlocks[i], balls, statistics);
             if(bonusBlocks[i].getDeleted()) {
                 std::cout << "." << std::endl;
-
                 bonuses[i]->setBonusState(Bonus::bonusState::MOVING);
             }
         }
@@ -195,7 +195,7 @@ void Game::textStream() {
 }
 
 void Game::updateStats() {
-    if(statistics.getScore() > 37 && statistics.getHP() != 0) {
+    if(statistics.getScore() >= 29 && statistics.getHP() != 0) {
         finalPhrase.setString("WIN");
         finalPhrase.setFillColor(sf::Color::Yellow);
         for (auto &ball : balls)

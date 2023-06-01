@@ -16,7 +16,7 @@ void Ball::ballUpdate(Statistics& stats) {
     else if (getPosBottom() > windowHeight) {
         if(stats.getHP() > 0)
             stats.hpPenalty();
-        setPosition( windowWidth / 2 , windowHeight - 10 - bogeyY - getRadius());
+        setPosition( windowWidth / 2 , windowHeight - 30 - bogeyY - getRadius());
         speed.y = -speed.y;
     }
 }
