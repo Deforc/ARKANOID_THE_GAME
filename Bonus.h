@@ -73,6 +73,10 @@ class BonusStickiness : public Bonus {
 public:
     BonusStickiness(float x, float y) : Bonus(x, y) {};
     void effect(std::vector<Ball>& balls, Block **savingBlock, Bogey& bogey) override {
+            for(auto &ball : balls)
+                ball.setStickiness(true);
+            bogey.setStickiness(true);
+
     }
 };
 

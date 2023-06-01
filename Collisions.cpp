@@ -24,13 +24,20 @@ bool RectRectIntersection (Rectangle& rect1, Rectangle& rect2) {
 void Collision (Bogey& bogey, std::vector<Ball>& balls) {
     for (auto& ball : balls) {
         if (BallRectIntersection(bogey, ball)) {
-            ball.setSpeedY(-ballSpeed);
-            if (ball.getPosition().x < bogey.getPosition().x) {
-                ball.setSpeedX(-ballSpeed);
+            if(ball.getStickiness() == true && bogey.getStickiness() == true)
+            {
+                ball.setSpeed({0,0});
+                ball.setPosition(bogey.getPosition().x + 5, bogey.getPosition().y - 10);
+            } else {
+                ball.setSpeedY(-ballSpeed);
+                if (ball.getPosition().x < bogey.getPosition().x) {
+                    ball.setSpeedX(-ballSpeed);
+                }
+                else {
+                    ball.setSpeedX(ballSpeed);
+                }
             }
-            else {
-                ball.setSpeedX(ballSpeed);
-            }
+
         }
     }
 }

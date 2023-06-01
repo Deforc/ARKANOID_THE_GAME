@@ -23,6 +23,7 @@ public:
     void setHP(int hitAmount) { healthpoint = hitAmount; }
     void healthMinusMinus() { healthpoint--; }
 
+
 protected:
     bool isDeleted = false;
     bool destroyability = true;

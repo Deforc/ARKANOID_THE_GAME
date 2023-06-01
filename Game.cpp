@@ -38,7 +38,7 @@ void Game::setBogey() {
 }
 
 void Game::setBalls() {
-    balls.emplace_back(windowWidth / 2  + 200, 3 * windowHeight / 4, sf::Color::White);
+    balls.emplace_back(windowWidth / 2  + 250, 3 * windowHeight / 4, sf::Color::White);
 }
 
 
@@ -46,7 +46,7 @@ void Game::setBlocks() {
     //Generate simple blocks so that there is a distance between them for indestructible blocks
     for(int u = 1; u <= simpleBlockAmountX; u++)
         for(int v = 1; v <= simpleBlockAmountY; v++)
-            simpleBlocks.emplace_back(u * (blockX + 70) + 10, (v+1)*(blockY + 25), sf::Color::Green);
+            simpleBlocks.emplace_back(u * (blockX + 70) + 10, (v+1)*(blockY + 25), sf::Color::Red);
 
     //Generate undestroyable blocks so that they are between simple ones
     for(int u = 0; u < undestroyableBlockAmountX; u++)
@@ -60,7 +60,7 @@ void Game::setBlocks() {
     for(int v = 1; v <= tankBlockAmountY; v++)
     {
         tankBlocks.emplace_back(600, (v+1)*(blockY + 25),sf::Color::Green);
-        tankBlocks[v].setHP(3);
+        tankBlocks[v].setHP(20);
     }
 
     //Generate speed blocks so that they are to the right of the tank ones.
@@ -84,14 +84,13 @@ void Game::setBonuses() {
     bonusChangeSpeed = BonusChangeSpeed (2*(blockX+70) + 10, 280);
     bonusBall = BonusBall (3*(blockX+70) + 10, 280);
     bonusSavingBottom = BonusSavingBottom (4*(blockX+70) + 10, 280);
-   // bonusStickiness = BonusStickiness (5*(blockX+70) + 10, 280);
+    bonusStickiness = BonusStickiness (5*(blockX+70) + 10, 280);
 
     bonuses.emplace_back(&bonusChangeSize);
     bonuses.emplace_back(&bonusChangeSpeed);
     bonuses.emplace_back(&bonusBall);
     bonuses.emplace_back(&bonusSavingBottom);
-
- //   bonuses.emplace_back(bonusStickiness);
+    bonuses.emplace_back(&bonusStickiness);
 }
 
 //Helper functions for mainLoop ----------------------------------------------
@@ -116,10 +115,12 @@ void Game::mainLoop() {
                 window.close();
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
             window.close();
-//        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-//        {
-//            //Здесь добавить обработку липкости
-//        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        {
+            for(auto &ball : balls)
+                ball.setStickiness(false);
+            bogey.setStickiness(false);
+        }
         // CHECKING COLLISIONS------------------------------------------------
         checkBallBlockCollision(simpleBlocks, balls, statistics);
         deletingBlocks(simpleBlocks);

@@ -12,8 +12,10 @@ public:
     void setBogeySize() { setSize({bogeyX+bogeyBonus, bogeyY});}
     void bogeyUpdate();
 
+    bool getStickiness() {return bogeyStickiness;}
+    void setStickiness(bool stickiness) {bogeyStickiness = stickiness;}
 private:
-
+    bool bogeyStickiness = false;
 };
 
 

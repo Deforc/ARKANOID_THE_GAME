@@ -21,9 +21,11 @@ public:
 
     void ballUpdate(Statistics& stats);
 
+    bool getStickiness() {return ballStickiness;}
+    void setStickiness(bool stickiness) {ballStickiness = stickiness;}
 private:
     sf::Vector2f speed {-ballSpeed, -ballSpeed};
-
+    bool ballStickiness = false;
 };
 
 
