@@ -21,7 +21,6 @@ public:
     void textStream();
     void drawBricks(std::vector<Block>& blockType);
     void drawObjects();
-    void Close();
     
 private:
     sf::RenderWindow window;

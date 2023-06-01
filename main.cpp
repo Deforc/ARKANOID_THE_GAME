@@ -6,5 +6,5 @@ int main()
     Game app;
     app.Init();
     app.mainLoop();
-   // app.Close();
+
 }

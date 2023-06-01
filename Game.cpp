@@ -34,7 +34,6 @@ void Game::setText() {
 }
 
 void Game::setBogey() {
-    //bogey = {windowWidth/2, windowHeight - bogeyY - 30};
     bogey = Bogey(windowWidth/2, windowHeight - bogeyY - 30);
 }
 
@@ -75,10 +74,6 @@ void Game::setBlocks() {
     for(int u = 1; u <= bonusBlockAmountX; u++)
         bonusBlocks.emplace_back(u*(blockX+70) + 10, 280, sf::Color::Magenta);
 
-    //Generate saving bottom in the bottom of window
-    //savingBottom = {0, windowHeight - 20 - savingBottomHeight, windowWidth, savingBottomHeight, sf::Color::White};
-    //savingBottom.setSavingBottom(true);
-
 
 }
 
@@ -97,7 +92,6 @@ void Game::setBonuses() {
     bonuses.emplace_back(&bonusSavingBottom);
 
  //   bonuses.emplace_back(bonusStickiness);
-
 }
 
 //Helper functions for mainLoop ----------------------------------------------
@@ -178,7 +172,6 @@ void Game::mainLoop() {
 
         window.clear();
 
-        //for (auto& bonus : bonuses) {
         for(int i = 0; i < bonuses.size(); i++ ){
             if(bonuses[i]->getBonusState() == Bonus::bonusState::RECEIVED)
             {
@@ -188,8 +181,6 @@ void Game::mainLoop() {
             }
 
         }
-        //bonuses.erase(remove_if(begin(bonuses), end(bonuses),
-      //  [](Bonus *bonus) {return  (bonus->getBonusState() == Bonus::bonusState::RECEIVED);}), end(bonuses));
         drawObjects();
     }
 }
@@ -242,9 +233,6 @@ void Game::drawObjects() {
     window.display();
 }
 
-//void Game::Close() {
-//    deletingBlocks(bonusBlocks);
-//}
 
 
 

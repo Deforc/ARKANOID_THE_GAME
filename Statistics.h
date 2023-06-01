@@ -9,7 +9,6 @@ public:
 
     int getScore() const { return score; }
     void scorePlusPlus() { score++; }
-  //  void scoreMinusMinus() { score--; }
 
 private:
     int healthpoint = 1;

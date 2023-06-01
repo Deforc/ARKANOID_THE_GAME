@@ -16,19 +16,16 @@ public:
     bool getDestroyability() const { return destroyability; }
     float getSpeedBonus() const { return speedBonus; }
     int getHP() const { return healthpoint; }
-   // bool getSavingBottom() const {return isSavingBottom; }
 
     void setDeleted(bool isDeleted) { this->isDeleted = isDeleted; }
     void setDestroyability(bool destroyability1) { destroyability = destroyability1; }
     void setSpeedBonus(float speedBonus) { this->speedBonus = speedBonus; }
     void setHP(int hitAmount) { healthpoint = hitAmount; }
-    //void setSavingBottom(bool isSavingBottom) {this->isSavingBottom = isSavingBottom;}
     void healthMinusMinus() { healthpoint--; }
 
 protected:
     bool isDeleted = false;
     bool destroyability = true;
-   // bool isSavingBottom = false;
     float speedBonus = 1.0f;
     int healthpoint = 1;
 };

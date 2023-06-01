@@ -11,7 +11,7 @@ public:
     float getPosTop() { return getPosition().y - getSize().y / 2.f; }
     float getPosBottom() { return getPosition().y + getSize().y / 2.f; }
     sf::Vector2f getSpeed() { return speed; }
-    //void setSpeed(sf::Vector2f speed) { this->speed = speed; }
+    void setSpeed(sf::Vector2f speed) { this->speed = speed; }
     void setSpeedX(float speedX) { speed.x = speedX; }
     void setSpeedY(float speedY) { speed.x = speedY; }
 

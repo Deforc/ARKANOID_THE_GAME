@@ -7,12 +7,6 @@
 #include "Options.h"
 #include "Rectangle.h"
 
-
-//enum class bonusType {
-//    NONE, CHANGESIZE, CHANGESPEED, STICKINESS, SAVINGBOTTOM, BONUSBALL
-//};
-
-
 class Bonus : public Rectangle {
 public:
     Bonus(float x, float y) : Rectangle(x, y, bonusX, bonusY, 0, bonusSpeed, sf::Color::White) {}
@@ -20,43 +14,19 @@ public:
     enum class bonusState {
         NONE, RECEIVED, MOVING, FAILED
     };
-//    bool getStatus() const { return this->received; }
-//    bool getMovingStatus() const { return this->moving; }
-//    bool getFailStatus() const { return this->failed; }
-//
-//    void setStatus(bool status) { this->received = status; }
-//    void setMovingStatus(bool status) { this->moving = status; }
-//    void setFailStatus(bool status) { this->failed = status; }
-    void setBonusPos(float x, float y) { this->bonusPos = {x, y}; }
 
-//    bonusType getBonusType() { return this->bonustype; }
-//    void setBonusType(bonusType bonustype) { this->bonustype = bonustype; }
+    void setBonusPos(float x, float y) { this->bonusPos = {x, y}; }
 
     bonusState getBonusState() { return this->bonusstate; }
     void setBonusState (bonusState bonusstate) { this->bonusstate = bonusstate; }
 
     virtual void effect(std::vector<Ball>& balls, Block **savingBlock, Bogey& bogey) {std::cout << "base work" << std::endl;};
 
-  //  void spawnBonusBall(std::vector<Ball>& balls);
-  //  void spawnSavingBottom(Block& savingBottom);
-
-    //void ballSpeedIncrease (float speedBonus) { ballSpeedBonus = speedBonus; }
-   // void bogeyWidthIncrease(float widthBonus) { bogeyWidthBonus = widthBonus; }
-
-   // void stickBallBogey ();
-
     void bonusUpdate();
 
 private:
     sf::Vector2f bonusPos { 0,0 };
-    //sf::Vector2f speed { 0, bonusSpeed };
-//    bool received = false;
-//    bool moving = false;
-//    bool failed = false;
-   // bonusType bonustype = bonusType::NONE;
     bonusState bonusstate = bonusState::NONE;
-//    float ballSpeedBonus = 1.f;
- //   float bogeyWidthBonus = 1.f;
 };
 
 class BonusChangeSize : public Bonus {
