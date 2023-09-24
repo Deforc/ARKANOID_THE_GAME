@@ -2,6 +2,7 @@
 #define ARKANOID_THE_GAME_GAME_H
 #include "Collisions.h"
 #include <sstream>
+#include <memory>
 
 class Game {
 public:
@@ -16,32 +17,30 @@ public:
     void setBogey();
     void updateStats();
     void mainLoop();
-    void checkBallBlockCollision(std::vector<Block>& blockType, std::vector<Ball>& balls, Statistics& statistics);
-    void deletingBlocks(std::vector<Block>& blockType);
+    void checkBallBlockCollision(std::vector<std::unique_ptr<Block>>& blockType, std::vector<Ball>& balls, Statistics& statistics);
+    void deletingBlocks(std::vector<std::unique_ptr<Block>>& blockType);
     void textStream();
-    void drawBricks(std::vector<Block>& blockType);
+    void drawBricks(std::vector<std::unique_ptr<Block>>& blockType);
     void drawObjects();
-    
+
+
 private:
     sf::RenderWindow window;
     sf::Font font;
     sf::Text scoreText, hpText, finalPhrase;
     Bogey bogey = Bogey(0, 0);
-    Block* savingBottom = nullptr;
+
+    std::unique_ptr<Block> savingBottom;
+
     std::vector<Ball> balls;
 
-    std::vector<Bonus *> bonuses;
-    BonusChangeSpeed bonusChangeSpeed = BonusChangeSpeed(0, 0);
-    BonusChangeSize bonusChangeSize = BonusChangeSize(0, 0);
-    BonusSavingBottom bonusSavingBottom = BonusSavingBottom(0, 0);
-    BonusBall bonusBall = BonusBall(0, 0);
-    BonusStickiness bonusStickiness = BonusStickiness(0, 0);
+    std::vector<std::unique_ptr<Bonus>> bonuses;
+    std::vector<std::unique_ptr<Block>> simpleBlocks;
+    std::vector<std::unique_ptr<Block>> undestroyableBlocks;
+    std::vector<std::unique_ptr<Block>> tankBlocks;
+    std::vector<std::unique_ptr<Block>> speedBlocks;
+    std::vector<std::unique_ptr<Block>> bonusBlocks;
 
-    std::vector<Block> simpleBlocks;
-    std::vector<Block> undestroyableBlocks;
-    std::vector<Block> tankBlocks;
-    std::vector<Block> speedBlocks;
-    std::vector<Block> bonusBlocks;
     Statistics statistics;
     int countBlocks = 0;
 };

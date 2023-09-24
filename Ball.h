@@ -8,7 +8,6 @@
 class Ball : public sf::CircleShape {
 public:
     Ball(float x, float y, sf::Color color);
-    ~Ball() = default;
     float getPosLeft() { return this->getPosition().x - this->getRadius(); }
     float getPosRight() { return this->getPosition().x + this->getRadius(); }
     float getPosTop() { return this->getPosition().y - this->getRadius(); }

@@ -14,6 +14,6 @@ bool RectRectIntersection (Rectangle& rect1, Rectangle& rect2);
 void Collision(Bogey& bogey, std::vector<Ball>& balls);
 void Collision(Bogey& bogey, Bonus& bonus);
 void Collision(Ball& ball1, Ball& ball2);
-void Collision(Block& block, std::vector<Ball>& balls, Statistics& statistics, bool addScore = true);
+void Collision(std::unique_ptr<Block>& block, std::vector<Ball>& balls, Statistics& statistics, bool addScore = true);
 
 #endif //ARKANOID_THE_GAME_COLLISIONS_H

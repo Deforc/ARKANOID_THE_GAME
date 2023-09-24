@@ -13,24 +13,50 @@ public:
     }
 
     bool getDeleted() const { return isDeleted; }
-    bool getDestroyability() const { return destroyability; }
     float getSpeedBonus() const { return speedBonus; }
-    int getHP() const { return healthpoint; }
 
-    void setDeleted(bool isDeleted) { this->isDeleted = isDeleted; }
-    void setDestroyability(bool destroyability1) { destroyability = destroyability1; }
     void setSpeedBonus(float speedBonus) { this->speedBonus = speedBonus; }
-    void setHP(int hitAmount) { healthpoint = hitAmount; }
-    void healthMinusMinus() { healthpoint--; }
-
+    virtual void destroy () { isDeleted = true; }
 
 protected:
     bool isDeleted = false;
-    bool destroyability = true;
-    float speedBonus = 1.0f;
-    int healthpoint = 1;
+    float speedBonus = 1.0f; // не нужен
+
 };
 
+class UndestroyableBlock : public Block {
+public:
+    UndestroyableBlock(float x, float y, sf::Color blockColor) : Block (x, y , blockColor) {}
+    void destroy() override {}
 
+};
+
+class TankBlock : public Block {
+public:
+    TankBlock(float x, float y, sf::Color blockColor) : Block (x, y , blockColor) {}
+    void destroy() override { if(hp==0) isDeleted = true; else hp--; }
+private:
+    int hp = 3;
+};
+
+class SpeedBlock : public Block {
+public:
+    SpeedBlock(float x, float y, sf::Color blockColor, float speedBonus) : Block (x, y , blockColor) {
+        this->speedBonus = speedBonus;
+    }
+private:
+    float speedBonus = 1.0f;
+};
+
+class BonusBlock : public Block {
+public:
+    BonusBlock(float x, float y, sf::Color blockColor) : Block (x, y , blockColor) {}
+};
+
+class SavingBlock : public Block {
+public:
+    SavingBlock(float x, float y, sf::Color blockColor) : Block (x, y, windowWidth, savingBottomHeight, blockColor) {}
+
+};
 
 #endif //ARKANOID_THE_GAME_BLOCK_H

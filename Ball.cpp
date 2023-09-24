@@ -18,5 +18,6 @@ void Ball::ballUpdate(Statistics& stats) {
             stats.hpPenalty();
         setPosition( windowWidth / 2 , windowHeight - 30 - bogeyY - getRadius());
         speed.y = -speed.y;
+
     }
 }

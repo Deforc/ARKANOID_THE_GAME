@@ -46,33 +46,29 @@ void Game::setBlocks() {
     //Generate simple blocks so that there is a distance between them for indestructible blocks
     for(int u = 1; u <= simpleBlockAmountX; u++)
         for(int v = 1; v <= simpleBlockAmountY; v++)
-            simpleBlocks.emplace_back(u * (blockX + 70) + 10, (v+1)*(blockY + 25), sf::Color::Red);
+            simpleBlocks.emplace_back(new Block(u * (blockX + 70) + 10, (v+1)*(blockY + 25), sf::Color::Red));
 
     //Generate undestroyable blocks so that they are between simple ones
     for(int u = 0; u < undestroyableBlockAmountX; u++)
         for(int v = 0; v < undestroyableBlockAmountY; v++) {
-            undestroyableBlocks.emplace_back((u+1) * (blockX + 70) + 75, (v+2)*(blockY + 25), sf::Color::Blue);
-            undestroyableBlocks[u*undestroyableBlockAmountY+v].setDestroyability(false);
-            undestroyableBlocks[u*undestroyableBlockAmountY+v].setHP(-1);
+            undestroyableBlocks.emplace_back(new UndestroyableBlock((u+1) * (blockX + 70) + 75, (v+2)*(blockY + 25), sf::Color::Blue));
         }
 
     //Generate tank blocks so that they are to the right of simple ones
     for(int v = 1; v <= tankBlockAmountY; v++)
     {
-        tankBlocks.emplace_back(600, (v+1)*(blockY + 25),sf::Color::Green);
-        tankBlocks[v].setHP(3);
+        tankBlocks.emplace_back(new TankBlock(600, (v+1)*(blockY + 25),sf::Color::Green));
     }
 
     //Generate speed blocks so that they are to the right of the tank ones.
     for (int v = 1; v <= speedBlockAmountY; v++)
     {
-        speedBlocks.emplace_back(670, (v+1)*(blockY + 25), sf::Color::Yellow);
-        speedBlocks[v].setSpeedBonus(ballSpeedBonus);
+        speedBlocks.emplace_back(new SpeedBlock(670, (v+1)*(blockY + 25), sf::Color::Yellow, ballSpeedBonus));
     }
 
     //Generate bonus blocks so that they are lower than the rest.
     for(int u = 1; u <= bonusBlockAmountX; u++)
-        bonusBlocks.emplace_back(u*(blockX+70) + 10, 280, sf::Color::Magenta);
+        bonusBlocks.emplace_back(new BonusBlock(u*(blockX+70) + 10, 480, sf::Color::Magenta));
 
 
 }
@@ -80,31 +76,30 @@ void Game::setBlocks() {
 void Game::setBonuses() {
     //We generate bonuses so that they are in the center of the bonus blocks.
     //Their Color is White and defined in Bonus.h in constructor
-    bonusChangeSize = BonusChangeSize (1*(blockX+70) + 10, 280);
-    bonusChangeSpeed = BonusChangeSpeed (2*(blockX+70) + 10, 280);
-    bonusBall = BonusBall (3*(blockX+70) + 10, 280);
-    bonusSavingBottom = BonusSavingBottom (4*(blockX+70) + 10, 280);
-    bonusStickiness = BonusStickiness (5*(blockX+70) + 10, 280);
 
-    bonuses.emplace_back(&bonusChangeSize);
-    bonuses.emplace_back(&bonusChangeSpeed);
-    bonuses.emplace_back(&bonusBall);
-    bonuses.emplace_back(&bonusSavingBottom);
-    bonuses.emplace_back(&bonusStickiness);
+    bonuses.emplace_back(new BonusChangeSize(1*(blockX+70) + 10, 280));
+    bonuses.emplace_back(new BonusChangeSpeed(2*(blockX+70) + 10, 280));
+    bonuses.emplace_back(new BonusBall(3*(blockX+70) + 10, 280));
+    bonuses.emplace_back(new BonusSavingBottom(4*(blockX+70) + 10, 280));
+    bonuses.emplace_back(new BonusStickiness(5*(blockX+70) + 10, 280));
 }
 
 //Helper functions for mainLoop ----------------------------------------------
-void Game::checkBallBlockCollision(std::vector<Block> &blockType, std::vector<Ball> &balls, Statistics &statistics) {
+void Game::checkBallBlockCollision(std::vector<std::unique_ptr<Block>> &blockType, std::vector<Ball> &balls, Statistics &statistics) {
     for(auto& block : blockType) {
         Collision(block, balls, statistics);
     }
 }
-void Game::deletingBlocks(std::vector<Block> &blockType) {
-    blockType.erase(std::remove_if(begin(blockType), end(blockType), [](Block& block) {return block.getDeleted();}), end(blockType));
+void Game::deletingBlocks(std::vector<std::unique_ptr<Block>> &blockType) {
+    for(int i = 0; i < blockType.size(); i++)
+    {
+        if (blockType[i]->getDeleted())
+         blockType.erase(blockType.begin()+i) ;
+    }
 }
-void Game::drawBricks(std::vector<Block>& blockType) {
+void Game::drawBricks(std::vector<std::unique_ptr<Block>>& blockType) {
     for(auto &block : blockType)
-        window.draw(block);
+        window.draw(*block.get());
 }
 //-----------------------------------------------------------------------------
 void Game::mainLoop() {
@@ -138,7 +133,7 @@ void Game::mainLoop() {
         for(int i = 0; i < bonusBlocks.size(); i++)
         {
             Collision(bonusBlocks[i], balls, statistics);
-            if(bonusBlocks[i].getDeleted()) {
+            if(bonusBlocks[i]->getDeleted()) {
                 std::cout << "." << std::endl;
                 bonuses[i]->setBonusState(Bonus::bonusState::MOVING);
             }
@@ -156,9 +151,12 @@ void Game::mainLoop() {
 
         if(savingBottom != nullptr)
         {
-            Collision(*savingBottom, balls, statistics, false);
+            Collision(savingBottom, balls, statistics, false);
             if(savingBottom->getDeleted())
-                savingBottom = nullptr;
+            {
+                savingBottom = nullptr; //здесь я понимаю, что всё, жизнь кончена, мне пора умирать, я - умный, и я помножу себя на ноль и тех, на кого показываю
+            }
+
         }
 
         //--------------------------------------------------------------------------
@@ -173,14 +171,23 @@ void Game::mainLoop() {
 
         window.clear();
 
-        for(int i = 0; i < bonuses.size(); i++ ){
+        for(int i = 0 ; i < bonuses.size(); i ++)
+        {
             if(bonuses[i]->getBonusState() == Bonus::bonusState::RECEIVED)
             {
-                bonuses[i]->effect(balls, &savingBottom, bogey);
+                bonuses[i]->effect(balls, bogey, &savingBottom);
                 bonuses.erase(bonuses.begin()+i);
-                std::cout << "!" << std::endl;
-            }
+                i--;
 
+
+            }
+            else if(bonuses[i]->getBonusState() == Bonus::bonusState::FAILED)
+            {
+
+                bonuses.erase(bonuses.begin()+i);
+                i--;
+
+            }
         }
         drawObjects();
     }

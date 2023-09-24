@@ -75,26 +75,21 @@ void Collision(Ball& ball1, Ball& ball2) {
 
 }
 
-void Collision(Block& block, std::vector<Ball>& balls, Statistics& statistics, bool addScore) {
+void Collision(std::unique_ptr<Block>& block, std::vector<Ball>& balls, Statistics& statistics, bool addScore) {
     for (auto& ball : balls) {
-        if (BallRectIntersection(block, ball)) {
-            if (block.getHP() > 0) {
-                if(addScore)
-                    statistics.scorePlusPlus();
-                block.healthMinusMinus();
-            }
-            if (block.getDestroyability() && (block.getHP() == 0))
-                block.setDeleted(true);
+        if (BallRectIntersection(*(block), ball)) {
 
-            if (block.getSpeedBonus() == 1.f)
+            block->destroy();
+
+            if (block->getSpeedBonus() == 1.f)
                 ball.setSpeed({ (ball.getSpeed().x > 0) ? ballSpeed : -ballSpeed,(ball.getSpeed().y > 0) ? ballSpeed : -ballSpeed });
-            else ball.setSpeed({ ball.getSpeed().x * block.getSpeedBonus(), ball.getSpeed().y * block.getSpeedBonus() });
+            else ball.setSpeed({ ball.getSpeed().x * block->getSpeedBonus(), ball.getSpeed().y * block->getSpeedBonus() });
 
 
-            float intersectionLeft = ball.getPosRight() - block.getPosLeft();
-            float intersectionRight = block.getPosRight() - ball.getPosLeft();
-            float intersectionTop = ball.getPosBottom() - block.getPosTop();
-            float intersectionBottom = block.getPosBottom() - ball.getPosTop();
+            float intersectionLeft = ball.getPosRight() - block->getPosLeft();
+            float intersectionRight = block->getPosRight() - ball.getPosLeft();
+            float intersectionTop = ball.getPosBottom() - block->getPosTop();
+            float intersectionBottom = block->getPosBottom() - ball.getPosTop();
 
             bool isBallFromLeft(abs(intersectionLeft) < abs(intersectionRight));
             bool isBallFromTop(abs(intersectionTop) < abs(intersectionBottom));

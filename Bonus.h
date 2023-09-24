@@ -6,6 +6,8 @@
 #include "Block.h"
 #include "Options.h"
 #include "Rectangle.h"
+#include <memory>
+#include <utility>
 
 class Bonus : public Rectangle {
 public:
@@ -20,7 +22,7 @@ public:
     bonusState getBonusState() { return this->bonusstate; }
     void setBonusState (bonusState bonusstate) { this->bonusstate = bonusstate; }
 
-    virtual void effect(std::vector<Ball>& balls, Block **savingBlock, Bogey& bogey) {std::cout << "base work" << std::endl;};
+    virtual void effect(std::vector<Ball> &balls, Bogey &bogey, std::unique_ptr<Block> *savingblock1) {std::cout << "base work" << std::endl;};
 
     void bonusUpdate();
 
@@ -31,53 +33,52 @@ private:
 
 class BonusChangeSize : public Bonus {
 public:
-    BonusChangeSize(float x, float y) : Bonus(x, y) {};
-    void effect(std::vector<Ball>& balls, Block **savingBlock, Bogey& bogey) override {
+    BonusChangeSize(float x, float y) : Bonus(x, y) { };
+    void effect(std::vector<Ball> &balls, Bogey &bogey, std::unique_ptr<Block> *savingblock1) override {
         bogey.setBogeySize();
         bogey.setOrigin(bogey.getSize().x / 2.f, bogey.getSize().y / 2.f);
     }
+
 };
 class BonusChangeSpeed : public Bonus {
 public:
-    BonusChangeSpeed(float x, float y) : Bonus(x, y) {};
-    void effect(std::vector<Ball>& balls, Block **savingBlock, Bogey& bogey) override {
+    BonusChangeSpeed(float x, float y) : Bonus(x, y) { }
+    void effect(std::vector<Ball> &balls, Bogey &bogey, std::unique_ptr<Block> *savingblock1) override {
         for(auto& ball : balls)
             ball.setSpeed({ ball.getSpeed().x * ballSpeedBonus, ball.getSpeed().y * ballSpeedBonus});
     }
+
 };
 class BonusBall : public Bonus {
 public:
-    BonusBall(float x, float y) : Bonus(x, y) {};
-    void effect(std::vector<Ball>& balls, Block **savingBlock, Bogey& bogey) override {
+    BonusBall(float x, float y) : Bonus(x, y) { };
+    void effect(std::vector<Ball> &balls, Bogey &bogey, std::unique_ptr<Block> *savingblock1) override {
         balls.emplace_back(windowWidth / 2, 3 * windowHeight / 4, sf::Color::White);
     }
+
 };
 
 class BonusSavingBottom : public Bonus {
 public:
     BonusSavingBottom(float x, float y) : Bonus(x, y) {};
-    void effect(std::vector<Ball>& balls, Block** savingBlock, Bogey& bogey) override {
-        std::cout << "1" << std::endl;
-        if(*savingBlock == nullptr)
+    void effect(std::vector<Ball>& balls, Bogey& bogey, std::unique_ptr<Block>* savingblock1) override {
+        if(*savingblock1 == nullptr)
         {
-            std::cout << "2" << std::endl;
-            *savingBlock = new Block (windowWidth / 2, windowHeight - savingBottomHeight, windowWidth, savingBottomHeight, sf::Color::White);
-            std::cout << "3" << std::endl;
+            *savingblock1 = std::unique_ptr<Block>(new SavingBlock(windowWidth / 2, windowHeight - savingBottomHeight, sf::Color::White));
         }
-       // else
-           // *savingBlock->setHP(*savingBlock->getHP() + 1);
-
     }
 };
 class BonusStickiness : public Bonus {
 public:
-    BonusStickiness(float x, float y) : Bonus(x, y) {};
-    void effect(std::vector<Ball>& balls, Block **savingBlock, Bogey& bogey) override {
-            for(auto &ball : balls)
-                ball.setStickiness(true);
-            bogey.setStickiness(true);
+    BonusStickiness(float x, float y) : Bonus(x, y) {
+    };
+    void effect(std::vector<Ball> &balls, Bogey &bogey, std::unique_ptr<Block> *savingblock1) override {
+        for(auto &ball : balls)
+            ball.setStickiness(true);
+        bogey.setStickiness(true);
 
     }
+
 };
 
 #endif //ARKANOID_THE_GAME_BONUS_H
