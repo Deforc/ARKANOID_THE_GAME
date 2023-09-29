@@ -42,7 +42,7 @@ private:
     std::vector<std::unique_ptr<Block>> bonusBlocks;
 
     Statistics statistics;
-    int countBlocks = 0;
+
 };
 
 

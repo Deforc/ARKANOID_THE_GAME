@@ -68,7 +68,7 @@ void Game::setBlocks() {
 
     //Generate bonus blocks so that they are lower than the rest.
     for(int u = 1; u <= bonusBlockAmountX; u++)
-        bonusBlocks.emplace_back(new BonusBlock(u*(blockX+70) + 10, 480, sf::Color::Magenta));
+        bonusBlocks.emplace_back(new BonusBlock(u*(blockX+70) + 10, 280, sf::Color::Magenta));
 
 
 }
@@ -77,11 +77,11 @@ void Game::setBonuses() {
     //We generate bonuses so that they are in the center of the bonus blocks.
     //Their Color is White and defined in Bonus.h in constructor
 
-    bonuses.emplace_back(new BonusChangeSize(1*(blockX+70) + 10, 280));
-    bonuses.emplace_back(new BonusChangeSpeed(2*(blockX+70) + 10, 280));
-    bonuses.emplace_back(new BonusBall(3*(blockX+70) + 10, 280));
-    bonuses.emplace_back(new BonusSavingBottom(4*(blockX+70) + 10, 280));
-    bonuses.emplace_back(new BonusStickiness(5*(blockX+70) + 10, 280));
+    bonuses.emplace_back(new BonusChangeSize(1*(blockX+70) + 10, 280, &bogey));
+    bonuses.emplace_back(new BonusChangeSpeed(2*(blockX+70) + 10, 280, &balls));
+    bonuses.emplace_back(new BonusBall(3*(blockX+70) + 10, 280, &balls));
+    bonuses.emplace_back(new BonusSavingBottom(4*(blockX+70) + 10, 280, &savingBottom));
+    bonuses.emplace_back(new BonusStickiness(5*(blockX+70) + 10, 280, &balls, &bogey));
 }
 
 //Helper functions for mainLoop ----------------------------------------------
@@ -94,7 +94,10 @@ void Game::deletingBlocks(std::vector<std::unique_ptr<Block>> &blockType) {
     for(int i = 0; i < blockType.size(); i++)
     {
         if (blockType[i]->getDeleted())
-         blockType.erase(blockType.begin()+i) ;
+        {
+            blockType.erase(blockType.begin()+i) ;
+            statistics.scorePlusPlus();
+        }
     }
 }
 void Game::drawBricks(std::vector<std::unique_ptr<Block>>& blockType) {
@@ -175,10 +178,9 @@ void Game::mainLoop() {
         {
             if(bonuses[i]->getBonusState() == Bonus::bonusState::RECEIVED)
             {
-                bonuses[i]->effect(balls, bogey, &savingBottom);
+                bonuses[i]->effect();
                 bonuses.erase(bonuses.begin()+i);
                 i--;
-
 
             }
             else if(bonuses[i]->getBonusState() == Bonus::bonusState::FAILED)

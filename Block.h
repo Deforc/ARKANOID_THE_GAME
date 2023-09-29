@@ -20,7 +20,7 @@ public:
 
 protected:
     bool isDeleted = false;
-    float speedBonus = 1.0f; // не нужен
+    float speedBonus = 1.0f;
 
 };
 
@@ -41,11 +41,7 @@ private:
 
 class SpeedBlock : public Block {
 public:
-    SpeedBlock(float x, float y, sf::Color blockColor, float speedBonus) : Block (x, y , blockColor) {
-        this->speedBonus = speedBonus;
-    }
-private:
-    float speedBonus = 1.0f;
+    SpeedBlock(float x, float y, sf::Color blockColor, float speedBonus) : Block (x, y , blockColor) {}
 };
 
 class BonusBlock : public Block {
